@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moon, Earth, and Sun Simulation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: black;
+        }
+        canvas {
+            display: block;
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="simulation"></canvas>
+    <script>
+        const canvas = document.getElementById('simulation');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const sun = { x: canvas.width / 2, y: canvas.height / 2, radius: 50, color: 'yellow' };
+        const earth = { radius: 20, color: 'blue', orbitRadius: 200, angle: 0, speed: 0.01 };
+        const moon = { radius: 10, color: 'gray', orbitRadius: 50, angle: 0, speed: 0.05 };
+
+        function drawCircle(x, y, radius, color) {
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Sun
+            drawCircle(sun.x, sun.y, sun.radius, sun.color);
+
+            // Update Earth's position
+            earth.angle += earth.speed;
+            const earthX = sun.x + earth.orbitRadius * Math.cos(earth.angle);
+            const earthY = sun.y + earth.orbitRadius * Math.sin(earth.angle);
+
+            // Draw Earth
+            drawCircle(earthX, earthY, earth.radius, earth.color);
+
+            // Update Moon's position
+            moon.angle += moon.speed;
+            const moonX = earthX + moon.orbitRadius * Math.cos(moon.angle);
+            const moonY = earthY + moon.orbitRadius * Math.sin(moon.angle);
+
+            // Draw Moon
+            drawCircle(moonX, moonY, moon.radius, moon.color);
+
+            requestAnimationFrame(update);
+        }
+
+        update();
+    </script>
+</body>
+</html>
